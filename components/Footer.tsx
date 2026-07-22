@@ -7,8 +7,8 @@ import { MdEmail } from "react-icons/md";
 export default function Footer() {
   return (
     <>
-      <footer className="bg-[#4F86A6]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-8 py-10 md:flex-row md:items-start md:justify-between">
+      <footer className="bg-[#004180]">
+        <div className="container mx-auto flex  flex-col gap-8 px-6 py-10 md:flex-row md:items-start md:justify-between">
           <div className="shrink-0">
             <Image
               src="/logo.png"
@@ -60,8 +60,8 @@ export default function Footer() {
         </div>
       </footer>
 
-      <div className="bg-[#2E5471] py-3 text-left text-base text-white">
-        <div className="mx-auto max-w-7xl px-6">
+      <div className="bg-[#042647] py-3 text-left text-base text-white">
+        <div className="container mx-auto  px-6">
           © 2026 Kolaboraya All rights reserved.
         </div>
       </div>

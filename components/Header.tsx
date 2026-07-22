@@ -3,11 +3,12 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="bg-[#4F86A6]">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-4 md:flex-row md:justify-between md:px-6">
+    <header className="bg-[#F1F0EE]">
+      <div className="container mx-auto flex flex-col items-center gap-4 px-4  md:flex-row md:items-center md:justify-between md:px-6">
+        {/* Logo */}
         <Link href="/" className="shrink-0">
           <Image
-            src="/logo.png"
+            src="/assets/logo-blue.png"
             alt="Pasar Kolaboraya"
             width={211}
             height={80}
@@ -16,47 +17,44 @@ export default function Header() {
           />
         </Link>
 
+        {/* Navigation */}
+        <nav className="flex flex-col items-center gap-3 md:flex-row md:gap-8">
+          <Link
+            href="#perjalanan"
+            className="font-souvenir text-lg leading-[22px] font-bold text-[#185DA2] transition-opacity hover:opacity-80"
+          >
+            Perjalanan Pasar Kolaboraya
+          </Link>
+
+          <Link
+            href="#builder"
+            className="font-souvenir text-lg leading-[22px] font-bold text-[#185DA2] transition-opacity hover:opacity-80"
+          >
+            Peran Ekosistem Builder
+          </Link>
+        </nav>
+
+        {/* Button */}
         <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:gap-4">
           <Link
             href="https://www.kolaboraya.id/"
             target="_blank"
             className="
               rounded-md
-              bg-[#F4E6C1]
+              bg-[#185DA2]
               px-5
               py-2
               text-center
               font-souvenir
               text-base
               font-bold
-              text-[#4F86A6]
+              text-[#F1F0EE]
               transition-opacity
               hover:opacity-90
               md:text-lg
             "
           >
             Kolaboraya
-          </Link>
-
-          <Link
-            href="https://www.roemahinspirit.id/"
-            target="_blank"
-            className="
-              rounded-md
-              bg-[#F4E6C1]
-              px-5
-              py-2
-              text-center
-              font-souvenir
-              text-base
-              font-bold
-              text-[#4F86A6]
-              transition-opacity
-              hover:opacity-90
-              md:text-lg
-            "
-          >
-            Rumah Inspiratif
           </Link>
         </div>
       </div>

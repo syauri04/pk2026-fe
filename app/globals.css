@@ -2,7 +2,7 @@
 
 @theme inline {
   --font-souvenir: var(--font-souvenir);
-  --font-inter: var(--font-inter);
+  --font-inclusive-sans: var(--font-inclusive-sans);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,7 +13,32 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--foreground);
   color: var(--foreground);
-  font-family: var(--font-inter);
+  font-family: var(--font-inclusive-sans);
+  overflow-x: hidden;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+.animate-float {
+  animation-name: float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
 }

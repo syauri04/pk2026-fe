@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Inter } from "next/font/google";
+import { Inclusive_Sans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -22,9 +22,9 @@ export const souvenir = localFont({
   display: "swap",
 });
 
-const inter = Inter({
+const inclusiveSans = Inclusive_Sans({
+  variable: "--font-inclusive-sans",
   subsets: ["latin"],
-  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${souvenir.variable} ${inter.variable} h-full antialiased`}
+      className={`${souvenir.variable} ${inclusiveSans.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
         <Header />
