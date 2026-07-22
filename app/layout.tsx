@@ -4,6 +4,7 @@ import { Inclusive_Sans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const souvenir = localFont({
   src: [
@@ -40,9 +41,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${souvenir.variable} ${inclusiveSans.variable} h-full antialiased scroll-smooth`}
+      className={`${souvenir.variable} ${inclusiveSans.variable} h-full antialiased `}
     >
       <body className="min-h-full flex flex-col">
+        <SmoothScroll />
         <Header />
         {children}
         <Footer />

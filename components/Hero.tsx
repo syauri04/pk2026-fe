@@ -5,14 +5,13 @@ export default function Hero() {
     <section className="relative isolate overflow-hidden">
       {/* Background */}
       <div
-        className="absolute inset-0 -z-20 bg-cover bg-center"
+        className="relative inset-0 -z-20 bg-cover bg-center h-[350px] md:h-[941px]"
         style={{
-          backgroundImage: "url('/assets/bg-culture-blue.png')",
+          backgroundImage: "url('/assets/bannerHero.png')",
         }}
       />
 
-      {/* Ornament */}
-      <div className="absolute inset-0 -z-10">
+      {/* <div className="absolute inset-0 -z-10">
         <Image
           src="/assets/ornament-hero.png"
           alt=""
@@ -22,9 +21,9 @@ export default function Hero() {
         />
       </div>
 
-      {/* Content */}
+      
       <div className="container mx-auto flex md:min-h-[941px] flex-col items-center justify-center px-6 py-28 text-center">
-        {/* Logo */}
+       
         <Image
           src="/assets/logo-hero.png"
           alt="Pasar Kolaboraya"
@@ -41,7 +40,7 @@ export default function Hero() {
           "
         />
 
-        {/* Tagline */}
+     
         <h2
           className="
             mt-6
@@ -57,7 +56,7 @@ export default function Hero() {
           Menyelam Lebih Dalam bersama Pendekatan Ekosistem
         </h2>
 
-        {/* Date */}
+       
         <p
           className="
             mt-2
@@ -70,7 +69,7 @@ export default function Hero() {
           Jakarta, 1–3 September 2026
         </p>
 
-        {/* Description */}
+     
         <p
           className="
             mt-10
@@ -88,7 +87,7 @@ export default function Hero() {
           pembelajaran bersama, pertemuan tahun ini diselenggarakan secara
           khusus untuk undangan terbatas.
         </p>
-      </div>
+      </div> */}
     </section>
   );
 }

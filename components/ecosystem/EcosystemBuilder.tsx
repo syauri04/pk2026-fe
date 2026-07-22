@@ -270,7 +270,7 @@ function FocusedOrnament({
         <h3 className="font-serif text-base font-bold leading-tight sm:text-lg">
           {item.title}
         </h3>
-        <p className="mt-2 text-xs leading-relaxed text-white/90 sm:text-sm">
+        <p className="mt-2 text-xs leading-[110%] text-white/90 sm:text-sm">
           {item.summary}
         </p>
       </aside>

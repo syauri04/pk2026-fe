@@ -111,7 +111,7 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
           </h2>
 
           <p
-            className={`mb-6 whitespace-pre-line text-base leading-[19px] text-justify ${
+            className={`mb-6 whitespace-pre-line text-base leading-[19px] text-justify z-90 ${
               isLight ? "text-white/80" : "text-[#1B2340]/75"
             }`}
             dangerouslySetInnerHTML={{ __html: data.description }}

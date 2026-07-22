@@ -135,12 +135,21 @@ export default function HorizontalScrollSection() {
           <WavyDivider
             ref={wavyRectRef}
             panelCount={panels.length}
-            className="pointer-events-none absolute left-0 top-10 z-30 hidden h-full w-full md:block"
+            className="pointer-events-none absolute left-0  z-30 hidden h-full w-full md:block"
             color="#FFFFFF"
-            amplitude={0.12}
-            ripplesPerPanel={2}
+            amplitude={0.19}
+            ripplesPerPanel={1}
             strokeWidth={6}
           />
+        </div>
+        {/* Indikator progress sederhana (opsional, hapus jika tidak perlu) */}
+        <div className="pointer-events-none absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 gap-2">
+          {panels.map((panel) => (
+            <span
+              key={panel.id}
+              className="h-1.5 w-6 rounded-full bg-white/90"
+            />
+          ))}
         </div>
       </div>
     </section>

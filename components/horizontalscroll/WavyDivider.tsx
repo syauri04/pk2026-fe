@@ -153,6 +153,7 @@ const WavyDivider = forwardRef<SVGRectElement, WavyDividerProps>(
           d={path}
           fill="none"
           stroke={color}
+          strokeOpacity={0.3}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={dashArray}

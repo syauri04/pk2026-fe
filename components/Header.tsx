@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <header className="relative z-50 bg-[#F1F0EE]">
-      <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
+      <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-2">
         <Link href="/" className="shrink-0" onClick={closeMenu}>
           <Image
             src="/assets/logo-blue.png"
