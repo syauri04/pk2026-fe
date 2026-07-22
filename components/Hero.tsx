@@ -23,7 +23,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto flex min-h-[941px] flex-col items-center justify-center px-6 py-28 text-center">
+      <div className="container mx-auto flex md:min-h-[941px] flex-col items-center justify-center px-6 py-28 text-center">
         {/* Logo */}
         <Image
           src="/assets/logo-hero.png"
@@ -33,8 +33,8 @@ export default function Hero() {
           priority
           className="
             h-full
-            w-[220px]
-            sm:w-[280px]
+            w-[300px]
+            sm:w-[360px]
             md:w-[360px]
             lg:w-[470px]
             xl:w-[760px]
@@ -47,14 +47,14 @@ export default function Hero() {
             mt-6
             max-w-4xl
             font-souvenir
-            text-xl
+            text-2xl
             italic
             leading-snug
             text-white
             md:text-[34px]
           "
         >
-          Deep Dive Pendekatan Ekosistem
+          Menyelam Lebih Dalam bersama Pendekatan Ekosistem
         </h2>
 
         {/* Date */}
@@ -62,7 +62,7 @@ export default function Hero() {
           className="
             mt-2
             font-souvenir
-            text-xl
+            text-2xl
             text-white
             md:text-[36px]
           "
@@ -76,14 +76,17 @@ export default function Hero() {
             mt-10
             max-w-[760px]
             font-souvenir
-            text-base
-            leading-10
+            text-xl
+            leading-8
+            md:leading-10
             text-white/95
             md:text-[28px]
           "
         >
-          Pasar Kolaboraya 2026 merupakan acara terbatas bagi Ecosystem Builder
-          yang dipilih melalui proses kurasi.
+          Pasar Kolaboraya 2026 dirancang sebagai ruang temu yang intim bagi
+          para Ecosystem Builder. Untuk menjaga kehangatan dan fokus pada
+          pembelajaran bersama, pertemuan tahun ini diselenggarakan secara
+          khusus untuk undangan terbatas.
         </p>
       </div>
     </section>

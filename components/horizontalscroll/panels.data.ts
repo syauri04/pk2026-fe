@@ -171,20 +171,20 @@ Pendekatan ini bahkan disebut sebagai "sebuah langkah revolusioner" oleh Direktu
     images: [
       {
         id: "2025-1",
-        src: "/assets/2024-1.png",
+        src: "/assets/2025-1.png",
         alt: "Dokumentasi Pasar Kolaboraya 2025 - sesi diskusi",
         className: "left-[34%] top-[11%] w-[55%]  z-10 p-3 bg-white",
       },
       {
         id: "2025-2",
-        src: "/assets/2024-2.png",
+        src: "/assets/2025-2.png",
         alt: "Dokumentasi Pasar Kolaboraya 2025 - suasana panggung",
         className:
           "left-[15%] top-[30%] w-[40%] rotate-[-1deg] z-20 p-3 bg-white",
       },
       {
         id: "2025-3",
-        src: "/assets/2024-3.png",
+        src: "/assets/2025-3.png",
         alt: "Dokumentasi Pasar Kolaboraya 2025 - suasana panggung",
         className: "left-[34%] top-[49%] w-[55%]  z-10 p-3 bg-white",
       },
