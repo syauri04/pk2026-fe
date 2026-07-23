@@ -84,7 +84,7 @@ Pendekatan ini bahkan disebut sebagai "sebuah langkah revolusioner" oleh Direktu
     id: "ornament-1",
     type: "ornament",
     bgClassName:
-      "bg-linear-to-r from-[#363D66] via-[#C3C3CA] via-[70%] to-[#F1EDE3]",
+      "bg-linear-to-b md:bg-linear-to-r from-[#363D66] via-[#C3C3CA] via-[70%] to-[#F1EDE3]",
     ornaments: [
       {
         id: "ornament-1-1",
@@ -223,7 +223,7 @@ Pendekatan ini bahkan disebut sebagai "sebuah langkah revolusioner" oleh Direktu
     id: "ornament-2",
     type: "ornament",
     bgClassName:
-      "bg-[linear-gradient(90deg,_#F1EDE3_0%,_#C3C3CA_32.21%,_#085AA8_100%)]",
+      "bg-[linear-gradient(180deg,_#F1EDE3_0%,_#C3C3CA_32.21%,_#085AA8_100%)] md:bg-[linear-gradient(90deg,_#F1EDE3_0%,_#C3C3CA_32.21%,_#085AA8_100%)]",
     ornaments: [
       {
         id: "ora-1",

@@ -103,7 +103,7 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
           )}
 
           <h2
-            className={`mb-4 text-2xl font-bold leading-[22px] ${
+            className={`mb-4 text-2xl font-bold leading-[26px] ${
               isLight ? "text-white" : "text-[#1B2340]"
             }`}
           >

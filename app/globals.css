@@ -42,3 +42,44 @@ body {
     animation: none;
   }
 }
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+.animate-float {
+  animation-name: float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.5;
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-bounce-slow {
+    animation: none;
+  }
+}

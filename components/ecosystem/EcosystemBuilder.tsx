@@ -4,11 +4,20 @@ import Image, { type StaticImageData } from "next/image";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import { motion, type MotionProps, useReducedMotion } from "framer-motion";
 
+type Coordinate = {
+  x: number;
+  y: number;
+};
+
+type ResponsiveCoordinate = Coordinate & {
+  mobile?: Coordinate;
+};
+
 type OrnamentBase = {
   id: number;
   image: string | StaticImageData;
   classImage?: string;
-  position: { x: number; y: number };
+  position: ResponsiveCoordinate;
   width: number;
 };
 
@@ -17,10 +26,10 @@ type InteractiveEcosystemItem = OrnamentBase & {
   kind?: "interactive";
   title: string;
   summary: string;
-  badgePosition?: { x: number; y: number };
+  badgePosition?: ResponsiveCoordinate;
   badgeColour?: "black" | "blue";
   popupSide?: "top" | "right" | "bottom" | "left";
-  popupPosition?: { x: number; y: number };
+  popupPosition?: ResponsiveCoordinate;
 };
 
 type StaticEcosystemItem = OrnamentBase & {
@@ -84,6 +93,7 @@ export function EcosystemBuilder({
     },
   });
 
+  const isMobile = useIsMobile();
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setActiveId(null);
@@ -98,7 +108,7 @@ export function EcosystemBuilder({
       aria-labelledby={titleId}
       className={`overflow-hidden bg-[#EBE6E5] ${className}`}
     >
-      <div className="container mx-auto px-4 py-8 md:px-6">
+      <div className="container mx-auto px-4 pt-8 pb-0 lg:py-8 md:px-6">
         <div className="relative mx-auto aspect-[16/10] min-h-[370px] w-full">
           <motion.h2
             {...itemMotion(0)}
@@ -120,12 +130,14 @@ export function EcosystemBuilder({
                   disabled={Boolean(activeItem)}
                   onOpen={setActiveId}
                   motionProps={itemMotion(index + 1)}
+                  isMobile={isMobile}
                 />
               ) : (
                 <StaticOrnament
                   key={item.id}
                   item={item}
                   motionProps={itemMotion(index + 1)}
+                  isMobile={isMobile}
                 />
               ),
             )}
@@ -135,6 +147,7 @@ export function EcosystemBuilder({
             <FocusedOrnament
               item={activeItem}
               onClose={() => setActiveId(null)}
+              isMobile={isMobile}
             />
           )}
         </div>
@@ -148,12 +161,15 @@ function OrnamentButton({
   disabled,
   onOpen,
   motionProps,
+  isMobile,
 }: {
   item: InteractiveEcosystemItem;
   disabled: boolean;
   onOpen: (id: number) => void;
   motionProps: MotionProps;
+  isMobile: boolean;
 }) {
+  const position = getCoordinate(item.position, isMobile);
   return (
     <motion.button
       {...motionProps}
@@ -163,8 +179,8 @@ function OrnamentButton({
       aria-label={`Lihat ${item.title}`}
       className="group absolute z-10 block cursor-pointer rounded-full outline-none disabled:pointer-events-none focus-visible:ring-4 focus-visible:ring-[#1260A8]/40"
       style={{
-        left: `${item.position.x}%`,
-        top: `${item.position.y}%`,
+        left: `${position.x}%`,
+        top: `${position.y}%`,
         width: `${item.width}%`,
       }}
     >
@@ -178,7 +194,11 @@ function OrnamentButton({
       />
       <NumberBadge
         number={item.id}
-        position={item.badgePosition}
+        position={
+          item.badgePosition
+            ? getCoordinate(item.badgePosition, isMobile)
+            : undefined
+        }
         colour={item.badgeColour}
       />
     </motion.button>
@@ -188,18 +208,21 @@ function OrnamentButton({
 function StaticOrnament({
   item,
   motionProps,
+  isMobile,
 }: {
   item: StaticEcosystemItem;
   motionProps: MotionProps;
+  isMobile: boolean;
 }) {
+  const position = getCoordinate(item.position, isMobile);
   return (
     <motion.div
       {...motionProps}
       aria-hidden="true"
       className="pointer-events-none absolute z-10"
       style={{
-        left: `${item.position.x}%`,
-        top: `${item.position.y}%`,
+        left: `${position.x}%`,
+        top: `${position.y}%`,
         width: `${item.width}%`,
       }}
     >
@@ -218,13 +241,24 @@ function StaticOrnament({
 function FocusedOrnament({
   item,
   onClose,
+  isMobile,
 }: {
   item: InteractiveEcosystemItem;
   onClose: () => void;
+  isMobile: boolean;
 }) {
+  const position = getCoordinate(item.position, isMobile);
+
   const side = item.popupSide ?? "right";
-  const customPopupPosition = item.popupPosition
-    ? { left: `${item.popupPosition.x}%`, top: `${item.popupPosition.y}%` }
+  const popupPosition = item.popupPosition
+    ? getCoordinate(item.popupPosition, isMobile)
+    : undefined;
+
+  const customPopupPosition = popupPosition
+    ? {
+        left: `${popupPosition.x}%`,
+        top: `${popupPosition.y}%`,
+      }
     : undefined;
 
   return (
@@ -234,8 +268,8 @@ function FocusedOrnament({
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className="absolute z-30"
       style={{
-        left: `${item.position.x}%`,
-        top: `${item.position.y}%`,
+        left: `${position.x}%`,
+        top: `${position.y}%`,
         width: `${item.width}%`,
       }}
     >
@@ -249,7 +283,11 @@ function FocusedOrnament({
       />
       <NumberBadge
         number={item.id}
-        position={item.badgePosition}
+        position={
+          item.badgePosition
+            ? getCoordinate(item.badgePosition, isMobile)
+            : undefined
+        }
         colour={item.badgeColour}
       />
 
@@ -295,4 +333,28 @@ function NumberBadge({
       {number}
     </span>
   );
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    const updateValue = () => setIsMobile(mediaQuery.matches);
+
+    updateValue();
+    mediaQuery.addEventListener("change", updateValue);
+
+    return () => mediaQuery.removeEventListener("change", updateValue);
+  }, []);
+
+  return isMobile;
+}
+
+function getCoordinate(
+  coordinate: ResponsiveCoordinate,
+  isMobile: boolean,
+): Coordinate {
+  return isMobile && coordinate.mobile ? coordinate.mobile : coordinate;
 }

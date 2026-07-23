@@ -6,31 +6,43 @@ interface WavyDividerProps {
   className?: string;
   /** warna garis, default krem seperti di desain */
   color?: string;
-  /** jumlah panel yang dilewati garis (dipakai buat lebar total & default waypoint) */
-  panelCount: number;
+  /** "horizontal" = garis mendatar sepanjang track (desktop), "vertical" = garis menurun (mobile/tablet, natural scroll) */
+  orientation?: "horizontal" | "vertical";
+  /** WAJIB utk orientation "horizontal": jumlah panel (tiap panel dianggap sama lebar) */
+  panelCount?: number;
   /**
-   * Posisi vertikal (0 = paling atas, 1 = paling bawah) garis di SETIAP batas
-   * panel, termasuk ujung paling kiri & kanan -- jadi panjang array harus
-   * `panelCount + 1`. Ini yang menentukan "arah besar" garis meliuk naik/turun
-   * per frame (macro trend), supaya bisa disesuaikan persis ke desain kamu,
-   * mis. turun di frame 2024 (dekat tombol CTA), naik di frame ornamen, dst.
+   * WAJIB utk orientation "vertical": tinggi asli (px, hasil ukur lewat ref)
+   * tiap panel, urut sesuai urutan panel di layar. Dipakai supaya batas
+   * gelombang PERSIS jatuh di batas antar-panel yang sebenarnya -- karena di
+   * mobile tinggi tiap panel beda-beda (panel teks vs panel ornamen strip),
+   * tidak bisa diasumsikan sama rata seperti mode horizontal.
+   */
+  panelSizes?: number[];
+  /**
+   * Posisi di sumbu silang (0-1) pada SETIAP batas panel, termasuk ujung
+   * awal & akhir -- panjang array harus `panelCount + 1` (horizontal) atau
+   * `panelSizes.length + 1` (vertical). Utk horizontal ini posisi vertikal
+   * (0=atas, 1=bawah); utk vertical ini posisi horizontal (0=kiri, 1=kanan).
    * Kalau tidak diisi, dipakai pola selang-seling default.
    */
   waypoints?: number[];
-  /** tinggi gelombang lokal (ripple), sebagai fraksi tinggi viewBox (0-1). Makin besar makin tinggi gelombangnya. */
+  /** tinggi gelombang lokal (ripple) di sumbu silang, fraksi 0-1. Makin besar makin "liar" gelombangnya. */
   amplitude?: number;
-  /** berapa banyak gelombang kecil (ripple) per 1 lebar panel */
+  /** berapa banyak gelombang kecil (ripple) per 1 panel */
   ripplesPerPanel?: number;
   /** tebal garis dalam unit viewBox (bukan px layar -- lihat vectorEffect di bawah) */
   strokeWidth?: number;
+  strokeOpacity?: number;
   /** pola dash "panjang-dash gap", format sama seperti CSS stroke-dasharray */
   dashArray?: string;
 }
 
-// Unit internal viewBox per 1 panel. Harus dipakai konsisten di parent
-// (HorizontalScrollSection) saat menghitung target `width` animasi GSAP.
+// Unit internal viewBox per 1 panel utk mode horizontal. Harus dipakai
+// konsisten di parent (HorizontalScrollSection) saat menghitung target
+// `width` animasi GSAP.
 export const WAVY_PANEL_UNIT = 1000;
-const VIEW_HEIGHT = 1000;
+// Ukuran sumbu silang (tinggi utk horizontal, lebar utk vertical) dalam unit viewBox.
+const CROSS_AXIS_SIZE = 1000;
 
 interface Point {
   x: number;
@@ -47,7 +59,8 @@ function smoothstep(t: number) {
 
 /** Ubah kumpulan titik jadi path SVG melengkung mulus (Catmull-Rom -> cubic
  *  Bezier), supaya hasilnya benar-benar melengkung, bukan garis lurus
- *  patah-patah antar titik sampel. */
+ *  patah-patah antar titik sampel. Sama dipakai utk kedua orientasi, karena
+ *  cuma bekerja di ruang x/y generik. */
 function smoothPath(points: Point[]): string {
   if (points.length < 2) return "";
   let d = `M${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
@@ -66,77 +79,109 @@ function smoothPath(points: Point[]): string {
 }
 
 /**
- * Garis putus-putus bergelombang TUNGGAL yang membentang dari frame pertama
- * sampai frame terakhir (bukan potongan-potongan per transisi) -- sesuai
- * desain aslinya, di mana garis ini meliuk terus-menerus melewati semua
- * frame.
+ * Garis putus-putus bergelombang TUNGGAL yang membentang dari panel pertama
+ * sampai panel terakhir -- meliuk terus-menerus melewati semua panel, bukan
+ * potongan-potongan per transisi.
  *
- * Cara kerja "animasi digambar":
- * - Seluruh path (sepanjang total lebar track) digambar penuh & bergaya
- *   dashed dari awal (statis).
- * - Path itu di-clip oleh sebuah <rect> (lewat clipPath) yang lebar awalnya 0.
- * - Ref yang di-forward mengarah ke <rect> tsb, supaya parent
- *   (HorizontalScrollSection) bisa meng-animate atribut `width`-nya dari 0
- *   sampai lebar penuh lewat GSAP, PERSIS di timeline & durasi yang sama
- *   dengan pergeseran horizontal track -- jadi garis tergambar mulai dari
- *   frame 1 sampai frame terakhir, 1:1 mengikuti posisi scroll.
+ * Dua orientasi:
+ * - "horizontal" (desktop): sumbu utama = X (lebar track), tiap panel diberi
+ *   jatah lebar SAMA (`WAVY_PANEL_UNIT`) karena semua panel memang selebar
+ *   1 layar penuh.
+ * - "vertical" (mobile/tablet): sumbu utama = Y (tinggi track), tiap panel
+ *   diberi jatah tinggi SESUAI `panelSizes` (hasil ukur langsung dari DOM),
+ *   karena tinggi tiap panel beda-beda tergantung isinya.
  *
- * Kenapa tidak "menukik"/patah di batas panel:
- * 1. Baseline (macro naik-turun dari `waypoints`) di-ease pakai smoothstep,
- *    jadi slope-nya melandai ke 0 persis di titik sambung setiap panel.
- * 2. Titik-titik sampel dirangkai jadi kurva Catmull-Rom -> Bezier (bukan
- *    garis lurus antar titik), jadi hasilnya melengkung mulus.
+ * Cara kerja "animasi digambar" sama utk keduanya: seluruh path digambar
+ * penuh & dashed dari awal (statis), lalu di-clip lewat sebuah <rect> yang
+ * ukurannya (width utk horizontal, height utk vertical) diawali 0. Ref yang
+ * di-forward mengarah ke <rect> itu, supaya parent bisa meng-animate-nya
+ * lewat GSAP ScrollTrigger sampai ukuran penuh, sinkron dengan progres scroll.
  */
 const WavyDivider = forwardRef<SVGRectElement, WavyDividerProps>(
   function WavyDivider(
     {
       className = "",
       color = "#F1EDE2",
+      orientation = "horizontal",
       panelCount,
+      panelSizes,
       waypoints,
       amplitude = 0.12,
       ripplesPerPanel = 1.5,
-      strokeWidth = 6,
+      strokeWidth = 8,
       dashArray = "14 18",
+      strokeOpacity = 0.4,
     },
     ref,
   ) {
     const clipId = useId();
-    const totalWidth = panelCount * WAVY_PANEL_UNIT;
+    const isVertical = orientation === "vertical";
+
+    // Jatah "panjang" tiap panel di sumbu utama, dalam unit viewBox.
+    const segments = useMemo(() => {
+      if (isVertical) {
+        return panelSizes && panelSizes.length > 0 ? panelSizes : [1];
+      }
+      return Array.from(
+        { length: Math.max(panelCount ?? 1, 1) },
+        () => WAVY_PANEL_UNIT,
+      );
+    }, [isVertical, panelSizes, panelCount]);
+
+    const segmentCount = segments.length;
+    const mainAxisTotal = useMemo(
+      () => segments.reduce((sum, s) => sum + s, 0),
+      [segments],
+    );
+
+    const viewBoxWidth = isVertical ? CROSS_AXIS_SIZE : mainAxisTotal;
+    const viewBoxHeight = isVertical ? mainAxisTotal : CROSS_AXIS_SIZE;
 
     const resolvedWaypoints = useMemo(() => {
-      if (waypoints && waypoints.length === panelCount + 1) return waypoints;
-      // Default: naik-turun selang-seling landai. Ganti lewat prop `waypoints`
-      // untuk menyamakan persis ke posisi garis di desain kamu per frame.
-      return Array.from({ length: panelCount + 1 }, (_, i) =>
+      if (waypoints && waypoints.length === segmentCount + 1) return waypoints;
+      return Array.from({ length: segmentCount + 1 }, (_, i) =>
         i % 2 === 0 ? 0.56 : 0.44,
       );
-    }, [waypoints, panelCount]);
+    }, [waypoints, segmentCount]);
 
     const path = useMemo(() => {
-      const samplesPerPanel = 16;
+      const samplesPerSegment = 16;
       const points: Point[] = [];
-      for (let p = 0; p < panelCount; p++) {
-        const yStart = resolvedWaypoints[p];
-        const yEnd = resolvedWaypoints[p + 1];
-        for (let s = 0; s <= samplesPerPanel; s++) {
+      let cursor = 0;
+      for (let p = 0; p < segmentCount; p++) {
+        const size = segments[p];
+        const crossStart = resolvedWaypoints[p];
+        const crossEnd = resolvedWaypoints[p + 1];
+        for (let s = 0; s <= samplesPerSegment; s++) {
           if (p > 0 && s === 0) continue; // hindari titik dobel di sambungan
-          const t = s / samplesPerPanel;
-          const x = p * WAVY_PANEL_UNIT + t * WAVY_PANEL_UNIT;
-          const baseline = yStart + (yEnd - yStart) * smoothstep(t);
+          const t = s / samplesPerSegment;
+          const mainAxisPos = cursor + t * size;
+          const baseline = crossStart + (crossEnd - crossStart) * smoothstep(t);
           const ripple =
             Math.sin(t * ripplesPerPanel * Math.PI * 2) * amplitude;
-          const y =
-            Math.min(0.97, Math.max(0.03, baseline + ripple)) * VIEW_HEIGHT;
-          points.push({ x, y });
+          const crossAxisPos =
+            Math.min(0.97, Math.max(0.03, baseline + ripple)) * CROSS_AXIS_SIZE;
+          points.push(
+            isVertical
+              ? { x: crossAxisPos, y: mainAxisPos }
+              : { x: mainAxisPos, y: crossAxisPos },
+          );
         }
+        cursor += size;
       }
       return smoothPath(points);
-    }, [panelCount, resolvedWaypoints, amplitude, ripplesPerPanel]);
+    }, [
+      segments,
+      segmentCount,
+      resolvedWaypoints,
+      amplitude,
+      ripplesPerPanel,
+      isVertical,
+    ]);
 
     return (
       <svg
-        viewBox={`0 0 ${totalWidth} ${VIEW_HEIGHT}`}
+        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         preserveAspectRatio="none"
         className={className}
         aria-hidden="true"
@@ -144,16 +189,20 @@ const WavyDivider = forwardRef<SVGRectElement, WavyDividerProps>(
       >
         <defs>
           <clipPath id={clipId}>
-            {/* width diawali 0, di-animate lewat GSAP dari parent, dari x=0
-              (frame pertama) sampai x=totalWidth (frame terakhir). */}
-            <rect ref={ref} x={0} y={0} width={0} height={VIEW_HEIGHT} />
+            {/* Horizontal: width diawali 0, di-animate ke penuh (kiri -> kanan).
+              Vertical: height diawali 0, di-animate ke penuh (atas -> bawah). */}
+            {isVertical ? (
+              <rect ref={ref} x={0} y={0} width={viewBoxWidth} height={0} />
+            ) : (
+              <rect ref={ref} x={0} y={0} width={0} height={viewBoxHeight} />
+            )}
           </clipPath>
         </defs>
         <path
           d={path}
           fill="none"
           stroke={color}
-          strokeOpacity={0.3}
+          strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={dashArray}
