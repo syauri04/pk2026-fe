@@ -21,7 +21,7 @@ function jumpToSection(id: string) {
 export default function ScrollHint({
   prevSectionId = "perjalanan",
   nextSectionId = "builder",
-  label = "Scroll untuk melihat perjalanan selengkapnya",
+  label = "Scroll ke atas untuk melihat perjalanan selengkapnya",
 }: ScrollHintProps) {
   return (
     <div className="pointer-events-none absolute bottom-6 right-6 z-50 hidden flex-row items-center gap-3 md:flex">
