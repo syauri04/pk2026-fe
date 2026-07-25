@@ -72,7 +72,10 @@ export function EcosystemBuilder({
   ),
   className = "",
 }: EcosystemBuilderProps) {
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  const activeId = selectedId ?? hoveredId;
   const titleId = useId();
   const shouldReduceMotion = useReducedMotion();
   const activeItem =
@@ -96,8 +99,12 @@ export function EcosystemBuilder({
   const isMobile = useIsMobile();
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setActiveId(null);
+      if (event.key === "Escape") {
+        setSelectedId(null);
+        setHoveredId(null);
+      }
     };
+
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, []);
@@ -127,8 +134,17 @@ export function EcosystemBuilder({
                 <OrnamentButton
                   key={item.id}
                   item={item}
-                  disabled={Boolean(activeItem)}
-                  onOpen={setActiveId}
+                  disabled={Boolean(selectedId)}
+                  onOpen={(id) => {
+                    setSelectedId(id);
+                    setHoveredId(null);
+                  }}
+                  onHoverStart={() => {
+                    if (!selectedId) setHoveredId(item.id);
+                  }}
+                  onHoverEnd={() => {
+                    if (!selectedId) setHoveredId(null);
+                  }}
                   motionProps={itemMotion(index + 1)}
                   isMobile={isMobile}
                 />
@@ -146,7 +162,11 @@ export function EcosystemBuilder({
           {activeItem && (
             <FocusedOrnament
               item={activeItem}
-              onClose={() => setActiveId(null)}
+              isPinned={selectedId === activeItem.id}
+              onClose={() => {
+                setSelectedId(null);
+                setHoveredId(null);
+              }}
               isMobile={isMobile}
             />
           )}
@@ -160,22 +180,31 @@ function OrnamentButton({
   item,
   disabled,
   onOpen,
+  onHoverStart,
+  onHoverEnd,
   motionProps,
   isMobile,
 }: {
   item: InteractiveEcosystemItem;
   disabled: boolean;
   onOpen: (id: number) => void;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
   motionProps: MotionProps;
   isMobile: boolean;
 }) {
   const position = getCoordinate(item.position, isMobile);
+
   return (
     <motion.button
       {...motionProps}
       type="button"
       disabled={disabled}
       onClick={() => onOpen(item.id)}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      onFocus={onHoverStart}
+      onBlur={onHoverEnd}
       aria-label={`Lihat ${item.title}`}
       className="group absolute z-10 block cursor-pointer rounded-full outline-none disabled:pointer-events-none focus-visible:ring-4 focus-visible:ring-[#1260A8]/40"
       style={{
@@ -192,6 +221,7 @@ function OrnamentButton({
         priority
         className={`h-auto w-full select-none ${item.classImage ?? ""}`}
       />
+
       <NumberBadge
         number={item.id}
         position={
@@ -242,10 +272,12 @@ function FocusedOrnament({
   item,
   onClose,
   isMobile,
+  isPinned,
 }: {
   item: InteractiveEcosystemItem;
   onClose: () => void;
   isMobile: boolean;
+  isPinned: boolean;
 }) {
   const position = getCoordinate(item.position, isMobile);
 
@@ -266,7 +298,7 @@ function FocusedOrnament({
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute z-30"
+      className={`absolute z-30 ${isPinned ? "" : "pointer-events-none"}`}
       style={{
         left: `${position.x}%`,
         top: `${position.y}%`,
