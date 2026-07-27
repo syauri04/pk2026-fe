@@ -3,6 +3,8 @@
 @theme inline {
   --font-souvenir: var(--font-souvenir);
   --font-inclusive-sans: var(--font-inclusive-sans);
+  --font-apple-garamond: var(--font-apple-garamond);
+  --font-google-sans: var(--font-google-sans);
 }
 
 @media (prefers-color-scheme: dark) {

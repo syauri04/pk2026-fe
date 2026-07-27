@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ContentPanelData } from "./types";
+import { appleGaramond } from "@/app/layout";
 
 const ctaVariantClasses: Record<ContentPanelData["ctaVariant"], string> = {
   blue: "bg-[#2451C7] hover:bg-[#3562DE] text-white",
@@ -103,7 +104,7 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
           )}
 
           <h2
-            className={`mb-4 text-2xl font-bold leading-[26px] ${
+            className={`mb-4 text-2xl ${data.id === "2026" ? `font-apple-garamond` : ""} font-bold leading-[26px] ${
               isLight ? "text-white" : "text-[#1B2340]"
             }`}
           >
@@ -111,7 +112,7 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
           </h2>
 
           <p
-            className={`mb-6 whitespace-pre-line text-base leading-[19px] text-justify z-90 ${
+            className={`mb-6 whitespace-pre-line text-base ${data.id === "2026" ? `font-google-sans` : ""} leading-[19px] text-justify z-90 ${
               isLight ? "text-white/80" : "text-[#1B2340]/75"
             }`}
             dangerouslySetInnerHTML={{ __html: data.description }}

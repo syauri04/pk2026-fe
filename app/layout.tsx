@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Inclusive_Sans } from "next/font/google";
+import { Inclusive_Sans, Google_Sans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -23,8 +23,30 @@ export const souvenir = localFont({
   display: "swap",
 });
 
+export const appleGaramond = localFont({
+  src: [
+    {
+      path: "../fonts/AppleGaramond.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/AppleGaramondBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-apple-garamond",
+  display: "swap",
+});
+
 const inclusiveSans = Inclusive_Sans({
   variable: "--font-inclusive-sans",
+  subsets: ["latin"],
+});
+
+const googleSans = Google_Sans({
+  variable: "--font-google-sans",
   subsets: ["latin"],
 });
 
@@ -41,7 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${souvenir.variable} ${inclusiveSans.variable} h-full antialiased `}
+      className={`${souvenir.variable} ${inclusiveSans.variable} ${googleSans.variable} ${appleGaramond.variable} h-full antialiased `}
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll />

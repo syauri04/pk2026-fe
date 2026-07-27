@@ -350,7 +350,7 @@ Diselenggarakan pada 1–3 September 2026 di Jakarta, di Pasar Kolaboraya 2026 p
       {
         src: "/assets/2026-orna-left-top.png",
         alt: "",
-        className: "left-0 -top-[25%] w-[500px]",
+        className: "left-20 -top-[25%] w-[500px]",
 
         floatDuration: 6,
       },
@@ -364,6 +364,11 @@ Diselenggarakan pada 1–3 September 2026 di Jakarta, di Pasar Kolaboraya 2026 p
         alt: "",
         className: "-left-[20%] -bottom-[35%] w-[500px] z-50",
       },
+      {
+        src: "/assets/2026-orna-top1.png",
+        alt: "",
+        className: "-left-[32%] top-0 w-[500px] z-50",
+      },
     ],
 
     rightOrnaments: [
@@ -376,6 +381,11 @@ Diselenggarakan pada 1–3 September 2026 di Jakarta, di Pasar Kolaboraya 2026 p
         src: "/assets/2026-right-2.png",
         alt: "",
         className: "right-0 -bottom-[10%] w-[520px]",
+      },
+      {
+        src: "/assets/2026-orna-top2.png",
+        alt: "",
+        className: "right-20 top-0 w-[520px]",
       },
     ],
   },
