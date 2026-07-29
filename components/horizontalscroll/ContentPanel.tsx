@@ -73,35 +73,71 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
             TEKS
         ============================ */}
         <div className={`w-full ${textAlignClass} ${textWidthClass}`}>
-          {data.imgYear && (
-            <div
-              className="mx-auto w-24 animate-float drop-shadow-xl sm:w-28 md:mx-0 md:w-32 lg:w-[190px]"
-              style={{ animationDelay: "0.6s", animationDuration: "6s" }}
-            >
-              <Image
-                src={data.imgYear}
-                alt={`Tahun ${data.year}`}
-                width={280}
-                height={280}
-                className="h-auto w-full"
-              />
-            </div>
-          )}
+          <div className=" flex items-start justify-center md:justify-between">
+            {/* Kiri */}
+            {data.logoPK25 && (
+              <div
+                className={` drop-shadow-xl ${data.classLogoPK25 ?? ""} -ml-8 w-[250px] hidden md:block`}
+              >
+                <Image
+                  src={data.logoPK25}
+                  alt="Logo PK 2025"
+                  width={390}
+                  height={350}
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
 
-          {data.imgYear2 && (
-            <div
-              className="mx-auto mb-6 w-32 animate-float drop-shadow-xl sm:w-40 md:mb-8 md:w-48 lg:w-[330px]"
-              style={{ animationDelay: "0s", animationDuration: "6s" }}
-            >
-              <Image
-                src={data.imgYear2}
-                alt={`Tahun ${data.year}`}
-                width={330}
-                height={330}
-                className="h-auto w-full"
-              />
-            </div>
-          )}
+            {/* Kanan */}
+            {data.imgYear && (
+              <div
+                className="animate-float drop-shadow-xl"
+                style={{ animationDelay: "0.6s", animationDuration: "6s" }}
+              >
+                <Image
+                  src={data.imgYear}
+                  alt={`Tahun ${data.year}`}
+                  width={280}
+                  height={280}
+                  className="w-24 sm:w-28 md:w-32 lg:w-[220px] h-auto"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className=" flex items-start justify-center">
+            {/* Kiri */}
+            {data.logoPK26 && (
+              <div
+                className={` drop-shadow-xl -ml-8 w-[400px] hidden md:block`}
+              >
+                <Image
+                  src={data.logoPK26}
+                  alt="Logo PK 2025"
+                  width={390}
+                  height={350}
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
+
+            {/* Kanan */}
+            {data.imgYear2 && (
+              <div
+                className="mx-auto mb-6 w-32 animate-float drop-shadow-xl sm:w-40 md:mb-8 md:w-48 lg:w-[330px]"
+                style={{ animationDelay: "0s", animationDuration: "6s" }}
+              >
+                <Image
+                  src={data.imgYear2}
+                  alt={`Tahun ${data.year}`}
+                  width={330}
+                  height={330}
+                  className="h-auto w-full"
+                />
+              </div>
+            )}
+          </div>
 
           <h2
             className={`mb-4 text-2xl ${data.id === "2026" ? `font-apple-garamond` : ""} font-bold leading-[26px] ${
@@ -193,6 +229,20 @@ export default function ContentPanel({ data }: { data: ContentPanelData }) {
                   />
                 </div>
               ))}
+
+              {data.logoPK24 && (
+                <div
+                  className={`absolute z-40 animate-float drop-shadow-xl ${data.classLogoPK ?? ""}`}
+                >
+                  <Image
+                    src={data.logoPK24}
+                    alt="logo PK 2024"
+                    width={640}
+                    height={480}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
 
               {renderOrnaments(data.ornaments)}
 

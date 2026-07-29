@@ -11,6 +11,8 @@ export const panels: PanelData[] = [
   // 1. PANEL 2024 -----------------------------------------------------------
   {
     id: "2024",
+    logoPK24: "/assets/logo2024.png",
+    classLogoPK: "-left-6 top-[2%] w-[35%]",
     type: "content",
     year: "",
     tone: "light",
@@ -151,7 +153,9 @@ Pendekatan ini bahkan disebut sebagai "sebuah langkah revolusioner" oleh Direktu
     id: "2025",
     type: "content",
     year: "2025",
-    imgYear: "/assets/2025.png",
+    logoPK25: "/assets/logo2025.png",
+    classLogoPK25: "-left-5 top-[4%] w-[35%]",
+    imgYear: "/assets/y2025.png",
     position: "left",
     tone: "dark",
     ctaVariant: "teal",
@@ -313,6 +317,7 @@ Pendekatan ini bahkan disebut sebagai "sebuah langkah revolusioner" oleh Direktu
     id: "2026",
     type: "content",
     year: "2026",
+    logoPK26: "/assets/logo2026.png",
     imgYear2: "/assets/2026.png",
     position: "center",
     tone: "light",

@@ -32,6 +32,11 @@ interface BasePanel {
 export interface ContentPanelData extends BasePanel {
   type: "content";
   year: string;
+  logoPK24?: string;
+  logoPK25?: string;
+  classLogoPK?: string;
+  classLogoPK25?: string;
+  logoPK26?: string;
   imgYear?: string;
   imgYear2?: string;
   title: string;
